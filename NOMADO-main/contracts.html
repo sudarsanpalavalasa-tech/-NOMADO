@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOMADO - Contracts</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #fff; background-color: #121212; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .header { background: #000; color: #fff; padding: 1rem 0; position: sticky; top: 0; z-index: 1000; }
+        .header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo span { color: #fff; }
+        .nav { display: flex; }
+        .nav a { color: #fff; margin-left: 20px; text-decoration: none; transition: color 0.3s; }
+        .nav a:hover { color: #00ff66; }
+        .hero { background: #000; color: #fff; text-align: center; padding: 80px 0 40px; }
+        .hero h1 { font-size: 2.2rem; color: #fff; }
+        .contracts-section { padding: 40px 0; background: #1a1a1a; }
+        .card { background: #222; border: 1px solid #333; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        label { display: block; margin: 8px 0 4px; color: #00ff66; }
+        input, select, textarea { width: 100%; padding: 10px; background: #333; color: #fff; border: 1px solid #333; border-radius: 4px; }
+        textarea { min-height: 100px; }
+        button { padding: 10px 16px; background: #00ff66; color: #000; border: none; border-radius: 4px; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #00cc00; }
+        .muted { color: #bbb; font-size: 14px; }
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+    </head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo"><span>NOMADO</span></div>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="contracts.html">Contracts</a>
+            </nav>
+        </div>
+    </header>
+    <section class="hero">
+        <div class="container">
+            <h1>Rental Contract</h1>
+            <p class="muted">Review and finalize your rental agreement below.</p>
+        </div>
+    </section>
+    <section class="contracts-section">
+        <div class="container">
+            <div class="grid">
+                <div class="card">
+                    <h3 style="margin-bottom:10px;">Contract Details</h3>
+                    <form id="contract-form">
+                        <label>Renter Name</label>
+                        <input id="renter-name" type="text" placeholder="Your full name" required>
+                        <label>Email</label>
+                        <input id="renter-email" type="email" placeholder="name@example.com" required>
+                        <label>Vehicle</label>
+                        <select id="vehicle-select" required>
+                            <option value="">Select a vehicle</option>
+                            <option>Car - Tesla Model 3</option>
+                            <option>Bike - Honda CBR</option>
+                            <option>Scooter - TVS iQube</option>
+                            <option>bullet - Hyundai Creta</option>
+                        </select>
+                        <label>Start Date</label>
+                        <input id="start-date" type="date" required>
+                        <label>End Date</label>
+                        <input id="end-date" type="date" required>
+                        <label>Driver Required</label>
+                        <select id="driver-required" required>
+                            <option>No</option>
+                            <option>Yes</option>
+                        </select>
+                        <label>Notes</label>
+                        <textarea id="notes" placeholder="Any special requests or details"></textarea>
+                        <div style="margin-top:12px; display:flex; gap:10px;">
+                            <button type="submit">Generate Contract</button>
+                            <a href="index.html" style="text-decoration:none;"><button type="button">Back to Home</button></a>
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom:10px;">Contract Preview</h3>
+                    <pre id="contract-preview" style="white-space: pre-wrap; background:#1a1a1a; padding:12px; border-radius:6px; border:1px solid #333; min-height:260px;">Fill the form to preview your contract...</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('contract-form');
+            const preview = document.getElementById('contract-preview');
+            function formatDate(value) {
+                if (!value) return '';
+                try { return new Date(value + 'T00:00:00').toDateString(); } catch(e) { return value; }
+            }
+            function buildPreview() {
+                const renter = (document.getElementById('renter-name').value || '').trim();
+                const email = (document.getElementById('renter-email').value || '').trim();
+                const vehicle = (document.getElementById('vehicle-select').value || '').trim();
+                const start = formatDate(document.getElementById('start-date').value);
+                const end = formatDate(document.getElementById('end-date').value);
+                const driver = document.getElementById('driver-required').value;
+                const notes = (document.getElementById('notes').value || '').trim();
+                preview.textContent = `NOMADO Rental Agreement\n\nRenter: ${renter}\nEmail: ${email}\nVehicle: ${vehicle}\nPeriod: ${start} to ${end}\nDriver Required: ${driver}\n\nTerms:\n- Renter agrees to return the vehicle in original condition.\n- 360° inspection video may be recorded.\n- Penalties apply for damages or late returns.\n\nNotes:\n${notes || '—'}`;
+            }
+            ['renter-name','renter-email','vehicle-select','start-date','end-date','driver-required','notes']
+                .forEach(id => document.getElementById(id).addEventListener('input', buildPreview));
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                buildPreview();
+                alert('Contract generated. You can now print or save the preview.');
+            });
+            buildPreview();
+        });
+    </script>
+</body>
+</html>
+
