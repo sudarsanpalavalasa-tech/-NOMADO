@@ -61,7 +61,12 @@
                             <option>Bike - Honda CBR</option>
                             <option>Scooter - TVS iQube</option>
                             <option>bullet - Hyundai Creta</option>
+                            <option>Boat - Speedboat</option>
+                            <option>Boat - Yacht</option>
+                            <option>Boat - Fishing Boat</option>
+                            <option>Other</option>
                         </select>
+                        <input type="text" id="custom-vehicle-name" placeholder="Enter vehicle name" style="display: none; margin-top: 5px;">
                         <label>Start Date</label>
                         <input id="start-date" type="date" required>
                         <label>End Date</label>
@@ -90,6 +95,20 @@
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('contract-form');
             const preview = document.getElementById('contract-preview');
+            
+            // Handle custom vehicle input for "Other" option
+            document.getElementById('vehicle-select').addEventListener('change', function() {
+                const customInput = document.getElementById('custom-vehicle-name');
+                if (this.value === 'Other') {
+                    customInput.style.display = 'block';
+                    customInput.required = true;
+                } else {
+                    customInput.style.display = 'none';
+                    customInput.required = false;
+                    customInput.value = '';
+                }
+            });
+            
             function formatDate(value) {
                 if (!value) return '';
                 try { return new Date(value + 'T00:00:00').toDateString(); } catch(e) { return value; }
@@ -97,14 +116,21 @@
             function buildPreview() {
                 const renter = (document.getElementById('renter-name').value || '').trim();
                 const email = (document.getElementById('renter-email').value || '').trim();
-                const vehicle = (document.getElementById('vehicle-select').value || '').trim();
+                let vehicle = (document.getElementById('vehicle-select').value || '').trim();
+                const customVehicle = (document.getElementById('custom-vehicle-name').value || '').trim();
+                
+                // Use custom vehicle name if "Other" is selected and custom name is provided
+                if (vehicle === 'Other' && customVehicle) {
+                    vehicle = `Other - ${customVehicle}`;
+                }
+                
                 const start = formatDate(document.getElementById('start-date').value);
                 const end = formatDate(document.getElementById('end-date').value);
                 const driver = document.getElementById('driver-required').value;
                 const notes = (document.getElementById('notes').value || '').trim();
                 preview.textContent = `NOMADO Rental Agreement\n\nRenter: ${renter}\nEmail: ${email}\nVehicle: ${vehicle}\nPeriod: ${start} to ${end}\nDriver Required: ${driver}\n\nTerms:\n- Renter agrees to return the vehicle in original condition.\n- 360° inspection video may be recorded.\n- Penalties apply for damages or late returns.\n\nNotes:\n${notes || '—'}`;
             }
-            ['renter-name','renter-email','vehicle-select','start-date','end-date','driver-required','notes']
+            ['renter-name','renter-email','vehicle-select','custom-vehicle-name','start-date','end-date','driver-required','notes']
                 .forEach(id => document.getElementById(id).addEventListener('input', buildPreview));
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
