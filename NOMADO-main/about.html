@@ -29,7 +29,6 @@
             width: 100%;
             top: 0;
             z-index: 1000;
-            display: none;
         }
         .header .container {
             display: flex;
@@ -48,38 +47,8 @@
         .nav a:hover {
             color: #00ff66;
         }
-        .jumble-container {
-            height: 100vh;
-            background-image: url('https://i.ibb.co/TxLtt1pr/IMG-20251016-WA0039.jpg');
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .jumble-wrapper {
-            position: relative;
-            width: 600px;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .letter {
-            position: absolute;
-            font-size: 120px;
-            font-weight: bold;
-            color: black;
-            opacity: 0;
-            transform: translate(-50%, -50%) rotate(0deg) scale(0.5);
-            transition: all 0.8s ease-in-out;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-        }
         .about-content {
             padding-top: 80px; 
-            display: none; 
         }
         .hero-about {
             background: black;
@@ -119,12 +88,9 @@
             text-align: center;
         }
         @media (max-width: 768px) {
-            .jumble-wrapper {
+            .stage {
                 width: 400px;
-                height: 150px;
-            }
-            .letter {
-                font-size: 80px;
+                height: 200px;
             }
             .hero-about h1 {
                 font-size: 2rem;
@@ -156,17 +122,6 @@
             </nav>
         </div>
     </header>
-
-    <div class="jumble-container" id="jumble-container">
-        <div class="jumble-wrapper">
-            <span class="letter" id="letter1"></span>
-            <span class="letter" id="letter2"></span>
-            <span class="letter" id="letter3"></span>
-            <span class="letter" id="letter4"></span>
-            <span class="letter" id="letter5"></span>
-            <span class="letter" id="letter6"></span>
-        </div>
-    </div>
 
     <div class="about-content" id="about-content">
         <section class="hero-about">
@@ -203,61 +158,12 @@
             </div>
         </section>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const letters = ['N', 'O', 'M', 'O', 'D', 'O'];
-            const letterElements = [
-                document.getElementById('letter1'),
-                document.getElementById('letter2'),
-                document.getElementById('letter3'),
-                document.getElementById('letter4'),
-                document.getElementById('letter5'),
-                document.getElementById('letter6')
-            ];
-            function shuffle(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-                return array;
-            }
-            const jumbledPositions = [
-                { left: '10%', top: '20%' },
-                { left: '80%', top: '30%' },
-                { left: '20%', top: '80%' },
-                { left: '70%', top: '10%' },
-                { left: '50%', top: '60%' },
-                { left: '30%', top: '40%' }
-            ];
-            const finalPositions = [
-                { left: '5%', top: '50%' },  
-                { left: '20%', top: '50%' }, 
-                { left: '35%', top: '50%' }, 
-                { left: '50%', top: '50%' }, 
-                { left: '65%', top: '50%' }, 
-                { left: '80%', top: '50%' }  
-            ];
-            const shuffledLetters = shuffle([...letters]);
-            letterElements.forEach((el, index) => {
-                el.textContent = shuffledLetters[index];
-                el.style.left = Math.random() * 100 + '%';
-                el.style.top = Math.random() * 100 + '%';
-                el.style.opacity = '1';
-                el.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 720 - 360}deg) scale(0.3)`;
-            });
-            setTimeout(() => {
-                letters.forEach((letter, index) => {
-                    letterElements[index].textContent = letter;
-                    letterElements[index].style.left = finalPositions[index].left;
-                    letterElements[index].style.top = finalPositions[index].top;
-                    letterElements[index].style.transform = 'translate(-50%, -50%) rotate(0deg) scale(1)';
-                });
-            }, 2500);
-            setTimeout(() => {
-                document.getElementById('jumble-container').style.display = 'none';
-                document.getElementById('header').style.display = 'block';
-                document.getElementById('about-content').style.display = 'block';
-            }, 5000);
+            // Show the header and about content immediately
+            document.getElementById('header').style.display = 'block';
+            document.getElementById('about-content').style.display = 'block';
         });
     </script>
 </body>

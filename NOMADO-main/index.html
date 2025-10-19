@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOMADO - Move Freely</title>
+    <!-- Font: bold rounded for main, cursive-like for tagline -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Pacifico&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -61,8 +63,8 @@
             left: -40%;
             top: 50%;
             transform: translateY(-50%);
-            width: 350px;
-            height: 180px;
+            width: 450px;
+            height: 230px;
             z-index: 5;
             animation: vehicleApproach 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
@@ -199,7 +201,7 @@
             align-items: center;
         }
         .logo img {
-            width: 40px;
+            width: 50px;
             margin-right: 10px;
         }
         .logo span {
@@ -326,8 +328,10 @@
         }
         .vehicles-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
+            justify-items: center;
+            padding: 1rem;
         }
         .vehicle-card {
             border: 1px solid #333;
@@ -335,6 +339,8 @@
             overflow: hidden;
             transition: transform 0.3s;
             background: #1a1a1a;
+            width: 100%;
+            max-width: 350px;
         }
         .vehicle-card:hover {
             transform: scale(1.05);
@@ -345,7 +351,7 @@
         }
         .vehicle-image img {
             width: 100%;
-            height: 200px;
+            height: 250px;
             object-fit: cover;
             transition: transform 0.5s;
         }
@@ -547,13 +553,28 @@
                 font-size: 150px;
             }
             .vehicle-animation {
-                width: 250px;
-                height: 120px;
+                width: 300px;
+                height: 150px;
+            }
+        }
+        @media (max-width: 768px) {
+            .vehicles-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1.5rem;
+                padding: 0.5rem;
+            }
+            .vehicle-card {
+                max-width: 100%;
             }
         }
         @media (max-width: 480px) {
             .vehicles-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 0.5rem;
+            }
+            .vehicle-card {
+                max-width: 100%;
             }
             .register-options .option {
                 width: 100%;
@@ -655,9 +676,162 @@
         .chat-input { display: flex; gap: 6px; padding: 10px; border-top: 1px solid #333; }
         .chat-input input { flex: 1; padding: 8px; background: #222; color: #fff; border: 1px solid #333; border-radius: 4px; }
         .chat-input button { padding: 8px 12px; background: #00ff66; color: #000; border: none; border-radius: 4px; cursor: pointer; }
+        
+        /* Animated Intro Styles */
+        :root{
+            --neon: #00ff66;
+            --neon-soft: #00ff99;
+            --tag: #00ffcc;
+            --bg: #000;
+        }
+        .intro-container {
+            height: 100vh;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Anton", system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10000;
+        }
+        .stage {
+            width: 980px;
+            max-width: 95vw;
+            height: 360px;
+            position: relative;
+        }
+        .intro-container svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .neon {
+            filter: drop-shadow(0 0 12px var(--neon-soft)) drop-shadow(0 0 24px rgba(0,255,102,0.18));
+        }
+        .soft-glow {
+            filter: drop-shadow(0 0 8px rgba(0,255,102,0.7));
+        }
+        .car-group {
+            transform: translateX(350px);
+            animation: carDrive 2s cubic-bezier(.22,.9,.28,1) forwards;
+        }
+        @keyframes carDrive {
+            0% { transform: translateX(350px); }
+            70% { transform: translateX(-60px); }
+            100% { transform: translateX(0); }
+        }
+        .final-logo {
+            opacity: 0;
+            transform: scale(0.98);
+            transition: opacity .12s linear, transform .3s ease;
+        }
+        .tagline {
+            opacity: 0;
+            transform: translateY(6px);
+            font-family: 'Pacifico', cursive;
+            font-size: 18px;
+            letter-spacing: 1px;
+            color: var(--tag);
+        }
+        .pulse {
+            animation: pulseGlow 1.6s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            from { filter: drop-shadow(0 0 14px var(--neon-soft)); }
+            to { filter: drop-shadow(0 0 28px rgba(0,255,102,0.18)); }
+        }
+        .hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .letter-fill {
+            fill: var(--neon);
+        }
+        .outline-stroke {
+            stroke: var(--neon);
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+        .car-outline {
+            stroke: var(--neon);
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            stroke-dasharray: 1200;
+            stroke-dashoffset: 1200;
+            transition: stroke-dashoffset 0.9s cubic-bezier(.22,.9,.28,1) 2.45s;
+        }
+        .intro-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease-out;
+        }
     </style>
 </head>
 <body>
+    <!-- Animated Intro -->
+    <div class="intro-container" id="intro-container">
+        <div class="stage" id="stage">
+            <!-- SVG coordinate system sized to stage -->
+            <svg viewBox="0 0 980 360" preserveAspectRatio="xMidYMid meet" class="neon" aria-hidden="true">
+                <!-- --- CAR GROUP (enters from RIGHT) --- -->
+                <g id="carGroup" class="car-group" transform="translate(0,0)">
+                    <!-- Car body (a rounded stroke) -->
+                    <path id="carBody"
+                          d="M150 210
+                             C160 170, 220 150, 300 150
+                             C420 150, 520 170, 620 200
+                             C680 220, 720 220, 740 220"
+                          class="outline-stroke soft-glow" stroke-width="8"/>
+                    <!-- Left wheel (initial) -->
+                    <g id="leftWheelGroup" transform="translate(220,240)">
+                        <circle id="leftWheel" cx="0" cy="0" r="18" stroke="var(--neon)" stroke-width="6" fill="transparent" class="soft-glow"/>
+                    </g>
+
+                    <!-- Right wheel (initial) -->
+                    <g id="rightWheelGroup" transform="translate(600,240)">
+                        <circle id="rightWheel" cx="0" cy="0" r="18" stroke="var(--neon)" stroke-width="6" fill="transparent" class="soft-glow"/>
+                    </g>
+
+                    <!-- text 'mad' between wheels inside the car -->
+                    <text id="madText" x="380" y="215" font-family="Anton, system-ui, sans-serif" font-size="36" fill="var(--neon)" text-anchor="middle" class="soft-glow">mad</text>
+                </g>
+
+                <!-- --- FINAL LOGO (hidden until the wheels become O's + letters form) --- -->
+                <g id="finalLogo" class="final-logo" transform="translate(0,0)">
+                    <!-- NOMADO letters: we draw each letter as simple text for clarity
+                         (we will reveal them together when time) -->
+                    <!-- Using text elements so fonts remain crisp; position them to match the image -->
+                    <g id="wordNOMADO" transform="translate(120,205)">
+                        <text id="nLetter" x="0" y="0" font-family="Anton, system-ui, sans-serif" font-size="88" fill="var(--neon)" class="soft-glow">n</text>
+                        <text id="o1Letter" x="120" y="0" font-family="Anton, system-ui, sans-serif" font-size="88" fill="var(--neon)" class="soft-glow">o</text>
+                        <text id="mLetter" x="210" y="0" font-family="Anton, system-ui, sans-serif" font-size="88" fill="var(--neon)" class="soft-glow">m</text>
+                        <text id="aLetter" x="320" y="0" font-family="Anton, system-ui, sans-serif" font-size="88" fill="var(--neon)" class="soft-glow">a</text>
+                        <text id="dLetter" x="430" y="0" font-family="Anton, system-ui, sans-serif" font-size="88" fill="var(--neon)" class="soft-glow">d</text>
+                        <text id="o2Letter" x="530" y="0" font-family="Anton, system-ui, sans-serif" font-size="88" fill="var(--neon)" class="soft-glow">o</text>
+                    </g>
+
+                    <!-- tagline - smaller cursive / Pacifico; appears slightly after the word -->
+                    <text id="tag" x="490" y="270" text-anchor="middle" font-family="'Pacifico', cursive" font-size="20" fill="var(--tag)">move freely</text>
+
+                    <!-- car outline drawn above the word (initially hidden by dashoffset) -->
+                    <path id="carOutline" class="car-outline" d="M160 150
+                        C210 120, 300 100, 420 110
+                        C560 120, 620 140, 700 180" />
+                </g>
+            </svg>
+        </div>
+    </div>
+
     <div class="initial-n-screen" id="initial-n-screen">
         <div class="initial-n">N</div>
     </div>
@@ -689,9 +863,9 @@
                     <a href="#login">Login</a>
                     <a href="#chat">AI Chat</a>
                     <a href="#Help">Help</a>
-                    <a href="#about">About</a>
+                    <a href="about.html">About</a>
                     <a href="contracts.html">Contracts</a>
-                    <a href="#contract-coming-soon">Contract Coming Soon</a>
+                    <!-- <a href="#contract-coming-soon">Contract Coming Soon</a> -->
                 </nav>
                 <div class="menu-toggle" id="menu-toggle">
                     <span></span>
@@ -971,14 +1145,147 @@
         });
 
 
+        // Animated Intro Script
+        (function initAnimatedIntro() {
+            const leftWheel = document.getElementById('leftWheelGroup');
+            const rightWheel = document.getElementById('rightWheelGroup');
+            const madText = document.getElementById('madText');
+            const carBody = document.getElementById('carBody');
+            const carGroup = document.getElementById('carGroup');
+            const finalLogo = document.getElementById('finalLogo');
+            const word = document.getElementById('wordNOMADO');
+            const tag = document.getElementById('tag');
+            const carOutline = document.getElementById('carOutline');
+
+            // final letter positions to align wheels -> o's
+            const o1X = 120 + 120; // group translate + x of o1 text (word group translate(120,205) + o1 x 120)
+            const o2X = 120 + 530; // second o -> 120 + 530
+            const targetY = 205 + 0 - 25; // elevate slightly to align with text baseline
+
+            // Wait until car animation completes approach (approx 2s)
+            setTimeout(() => {
+                // small braking "settle" (no sound): add a tiny visual scale to car body to imply brake
+                carBody.style.transition = 'transform 140ms ease';
+                carBody.style.transform = 'scale(0.998,0.998)';
+
+                // after 120ms morph wheels
+                setTimeout(() => {
+                    // move left wheel to first 'o' position (absolute transform on group)
+                    const svg = document.querySelector('#intro-container svg');
+                    const svgRect = svg.viewBox.baseVal; // using viewBox coords
+
+                    // Compute delta transforms by reading current transform of left and right groups:
+                    // Left group initially at translate(220,240) (set in markup)
+                    // Right group at translate(600,240)
+                    // We'll animate them to x positions of o1 and o2 (use CSS transforms)
+                    leftWheel.style.transition = 'transform 220ms cubic-bezier(.22,.9,.28,1), opacity 120ms';
+                    rightWheel.style.transition = 'transform 220ms cubic-bezier(.22,.9,.28,1), opacity 120ms';
+
+                    // target positions computed using the already-known final coordinates
+                    // For left: target center is approximately (o1X, targetY)
+                    // For right: (o2X, targetY)
+                    // But leftWheel's current group transform origin is its own coordinate (220,240)
+                    // We'll calculate translate delta:
+                    const startLeft = {x: 220, y: 240};
+                    const startRight= {x: 600, y: 240};
+                    const deltaLeftX = (o1X) - startLeft.x;
+                    const deltaLeftY = (205) - startLeft.y + 6; // small vertical tweak
+                    const deltaRightX = (o2X) - startRight.x;
+                    const deltaRightY = (205) - startRight.y + 6;
+
+                    leftWheel.style.transform = `translate(${deltaLeftX}px, ${deltaLeftY}px) scale(2.4)`;   // enlarge wheel to become O
+                    rightWheel.style.transform = `translate(${deltaRightX}px, ${deltaRightY}px) scale(2.4)`;
+
+                    // slightly fade 'mad' text while wheels move
+                    madText.style.transition = 'opacity 160ms linear';
+                    madText.style.opacity = '0';
+
+                    // small delay then hide car group (body and small bits) and reveal final logo
+                    setTimeout(() => {
+                        // hide car body and mad text + wheel outlines (they will be hidden because we show final text)
+                        carGroup.classList.add('hide');
+
+                        // reveal final logo instantly
+                        finalLogo.style.opacity = '1';
+                        finalLogo.style.transform = 'scale(1)';
+                        finalLogo.classList.add('pulse'); // subtle pulse on reveal
+
+                        // reveal tagline with small lag
+                        tag.style.transition = 'opacity 420ms ease, transform 420ms ease';
+                        setTimeout(()=> {
+                            tag.style.opacity = '1';
+                            tag.style.transform = 'translateY(0)';
+                        }, 120);
+
+                        // draw car outline stroke using stroke-dashoffset transition:
+                        // (this uses CSS transition earlier declared; just trigger by setting dashoffset to 0)
+                        setTimeout(() => {
+                            carOutline.style.strokeDashoffset = '0';
+                        }, 100);
+
+                        // final tweak: make the two letters 'o' visually match the wheel—we already transitioned wheels
+                        // but also we keep the text o's visible (they're in front). To make them look like the wheel moved into place,
+                        // we animate the text o's scale from tiny to normal quickly.
+                        const o1 = document.getElementById('o1Letter');
+                        const o2 = document.getElementById('o2Letter');
+                        [o1,o2].forEach(o=> {
+                            o.style.transformOrigin = 'center center';
+                            o.style.transform = 'scale(0.01)';
+                            o.style.transition = 'transform 120ms ease';
+                        });
+                        // show all letters at once (forms at the same time)
+                        setTimeout(()=> {
+                            const letters = document.querySelectorAll('#wordNOMADO text');
+                            letters.forEach(t => { t.style.opacity = '1'; t.style.transition = 'opacity 90ms linear'; });
+                            o1.style.transform = 'scale(1)';
+                            o2.style.transform = 'scale(1)';
+                        }, 90);
+
+                        // final: remove wheel DOMs after short delay (so they don't overlap)
+                        setTimeout(() => {
+                            leftWheel.remove();
+                            rightWheel.remove();
+                        }, 600);
+
+                    }, 220);
+
+                }, 140);
+
+            }, 2000);
+
+            // initial states: hide final letters until reveal
+            (function setInitialStates(){
+                finalLogo.style.opacity = '0';
+                tag.style.opacity = '0';
+                // make textual letters invisible (we'll reveal them together)
+                const letters = document.querySelectorAll('#wordNOMADO text');
+                letters.forEach(t => {
+                    t.style.opacity = '0';
+                });
+
+                // ensure carOutline dashoffset is set (fallback)
+                carOutline.style.strokeDashoffset = carOutline.getTotalLength ? carOutline.getTotalLength() : 1200;
+                carOutline.style.strokeDasharray = carOutline.getTotalLength ? carOutline.getTotalLength() : 1200;
+            })();
+
+            // Hide intro after animation completes and show the rest of the page
+            setTimeout(() => {
+                document.getElementById('intro-container').classList.add('hidden');
+                setTimeout(() => {
+                    document.getElementById('intro-container').style.display = 'none';
+                }, 1000);
+            }, 5000);
+        })();
+
         document.addEventListener('DOMContentLoaded', () => {
+            // Start the existing animations after the animated intro completes (5 seconds)
             setTimeout(() => {
                 document.getElementById('initial-n-screen').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('initial-n-screen').style.display = 'none';
                     document.getElementById('logo-container').style.display = 'flex';
                 }, 1500);
-            }, 2000);
+            }, 5000);
 
             setTimeout(() => {
                 const letterN = document.getElementById('letter-n');
@@ -987,7 +1294,7 @@
                 setTimeout(() => {
                     letterN.style.animation = 'none';
                 }, 800);
-            }, 2000);
+            }, 7000);
 
             setTimeout(() => {
                 const o1 = document.getElementById('wheel-o1');
@@ -1053,11 +1360,11 @@
                     }, 300);
                 }, 100);
 
-            }, 2500);
+            }, 7500);
 
             setTimeout(() => {
                 document.getElementById('full-logo').style.opacity = '1';
-            }, 4000);
+            }, 9000);
 
             setTimeout(() => {
                 document.getElementById('logo-container').style.opacity = '0';
@@ -1065,7 +1372,7 @@
                     document.getElementById('logo-container').style.display = 'none';
                     document.getElementById('landing-page').style.display = 'block';
                 }, 1000);
-            }, 6000);
+            }, 11000);
 
             const menuToggle = document.getElementById('menu-toggle');
             const nav = document.getElementById('nav');
