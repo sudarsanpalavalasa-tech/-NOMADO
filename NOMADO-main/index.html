@@ -328,10 +328,8 @@
         }
         .vehicles-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 2rem;
-            justify-items: center;
-            padding: 1rem;
         }
         .vehicle-card {
             border: 1px solid #333;
@@ -339,8 +337,6 @@
             overflow: hidden;
             transition: transform 0.3s;
             background: #1a1a1a;
-            width: 100%;
-            max-width: 350px;
         }
         .vehicle-card:hover {
             transform: scale(1.05);
@@ -557,24 +553,9 @@
                 height: 150px;
             }
         }
-        @media (max-width: 768px) {
-            .vehicles-grid {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                gap: 1.5rem;
-                padding: 0.5rem;
-            }
-            .vehicle-card {
-                max-width: 100%;
-            }
-        }
         @media (max-width: 480px) {
             .vehicles-grid {
                 grid-template-columns: 1fr;
-                gap: 1rem;
-                padding: 0.5rem;
-            }
-            .vehicle-card {
-                max-width: 100%;
             }
             .register-options .option {
                 width: 100%;

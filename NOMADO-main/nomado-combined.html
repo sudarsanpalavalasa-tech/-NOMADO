@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOMADO - Move Freely</title>
+    <!-- Font: bold rounded for main, cursive-like for tagline -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        /* Common Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #fff;
+            background-color: #121212;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        #send{
+            margin-top: 10px;
+        }
+
+        /* Variables */
+        :root{
+            --neon: #00ff66;
+            --neon-soft: #00ff99;
+            --tag: #00ffcc;
+            --bg: #000;
+        }
+
+        /* Header Styles */
+        .header {
+            background: #000;
+            color: #fff;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo span { color: #fff; }
+        .nav { display: flex; }
+        .nav a { color: #fff; margin-left: 20px; text-decoration: none; transition: color 0.3s; }
+        .nav a:hover { color: #00ff66; }
+
+        /* Intro Animation Styles */
+        .initial-n-screen {
+            height: 100vh;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 1.5s ease-out;
+        }
+        .initial-n {
+            font-size: clamp(150px, 20vw, 300px);
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 20px #00ff66, 0 0 40px #00ff66;
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.05); opacity: 1; }
+        }
+        .logo-container {
+            height: 100vh;
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            display: none;
+        }
+        .vehicle-animation {
+            position: absolute;
+            left: -40%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 450px;
+            height: 230px;
+            z-index: 5;
+            animation: vehicleApproach 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        .anim-vehicle {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 20px rgba(0,255,102,0.3));
+        }
+        @keyframes vehicleApproach {
+            0% { left: -40%; transform: translateY(-50%) scale(0.8); }
+            70% { left: 15%; transform: translateY(-50%) scale(1); }
+            100% { left: 10%; transform: translateY(-50%) scale(1); }
+        }
+        .dust-trail {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.5), transparent);
+            opacity: 0;
+            animation: dust 3s ease-out forwards 0.5s;
+        }
+        @keyframes dust {
+            0% { opacity: 0; transform: translateX(-100%); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(100%); }
+        }
+        .mad-text {
+            position: absolute;
+            top: 35%;
+            left: 85%;
+            transform: translateX(-50%);
+            font-size: 35px;
+            font-weight: bold;
+            color: #fff;
+            opacity: 1;
+            z-index: 6;
+            text-shadow: 2px 2px 4px #000;
+        }
+        .wheel {
+            position: absolute;
+            bottom: 15px;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, #666 0%, #333 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            font-weight: bold;
+            color: #fff;
+            opacity: 1;
+            z-index: 6;
+            box-shadow: 0 0 10px rgba(0,255,102,0.5);
+            transition: all 0s;
+        }
+        .front-wheel {
+            left: 60px;
+        }
+        .rear-wheel {
+            right: 60px;
+        }
+        .letter-n {
+            font-size: clamp(120px, 15vw, 200px);
+            font-weight: bold;
+            color: #fff;
+            position: absolute;
+            left: 15%;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            z-index: 4;
+            text-shadow: 0 0 10px #fff;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateY(-50%) translateX(0) rotate(0deg); }
+            25% { transform: translateY(-50%) translateX(-15px) rotate(-2deg); }
+            75% { transform: translateY(-50%) translateX(15px) rotate(2deg); }
+        }
+        @keyframes impactGlow {
+            0% { box-shadow: 0 0 20px #00ff66; }
+            50% { box-shadow: 0 0 50px #00ff66, 0 0 80px #00ff66; }
+            100% { box-shadow: 0 0 20px #00ff66; }
+        }
+        .full-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in;
+            color: #fff;
+            z-index: 7;
+        }
+        .full-logo h1 {
+            font-size: clamp(40px, 8vw, 72px);
+            margin: 0;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 0 0 20px #00ff66;
+            animation: fadeInUp 1s ease-out forwards;
+        }
+        .full-logo p {
+            font-size: clamp(18px, 3vw, 28px);
+            margin: 0;
+            color: #ccc;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .landing-page {
+            min-height: 100vh;
+            background-color: #121212;
+        }
+
+        /* Animated Intro Styles */
+        .stage {
+            width: 980px;                /* final visual width */
+            max-width:95vw;
+            height: 360px;               /* final visual height */
+            position:relative;
+        }
+        svg { display:block; width:100%; height:100%; }
+        .neon { filter: drop-shadow(0 0 12px var(--neon-soft)) drop-shadow(0 0 24px rgba(0,255,102,0.18)); }
+        .soft-glow{ filter: drop-shadow(0 0 8px rgba(0,255,102,0.7)); }
+        .car-group { transform: translateX(350px); animation: carDrive 2s cubic-bezier(.22,.9,.28,1) forwards; }
+        @keyframes carDrive {
+            0% { transform: translateX(350px); }
+            70% { transform: translateX(-60px); } /* approach */
+            100%{ transform: translateX(0); }     /* parked */
+        }
+        .final-logo { opacity: 0; transform: scale(0.98); transition: opacity .12s linear, transform .3s ease; }
+        .tagline { opacity: 0; transform: translateY(6px); font-family: 'Pacifico', cursive; font-size:18px; letter-spacing:1px; color:var(--tag); }
+        .pulse {
+            animation: pulseGlow 1.6s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            from { filter: drop-shadow(0 0 14px var(--neon-soft)); }
+            to   { filter: drop-shadow(0 0 28px rgba(0,255,102,0.18)); }
+        }
+        .hide { opacity:0; pointer-events:none; }
+        .letter-fill { fill: var(--neon); }
+        .outline-stroke { stroke: var(--neon); stroke-width:6; stroke-linecap:round; stroke-linejoin:round; fill:none; }
+        .car-outline { stroke:var(--neon); stroke-width:10; stroke-linecap:round; stroke-linejoin:round; fill:none;
+                     stroke-dasharray:1200; stroke-dashoffset:1200; transition: stroke-dashoffset 0.9s cubic-bezier(.22,.9,.28,1) 2.45s; }
+
+        /* Contracts Styles */
+        .hero { background: #000; color: #fff; text-align: center; padding: 80px 0 40px; }
+        .hero h1 { font-size: 2.2rem; color: #fff; }
+        .contracts-section { padding: 40px 0; background: #1a1a1a; }
+        .card { background: #222; border: 1px solid #333; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        label { display: block; margin: 8px 0 4px; color: #00ff66; }
+        input, select, textarea { width: 100%; padding: 10px; background: #333; color: #fff; border: 1px solid #333; border-radius: 4px; }
+        textarea { min-height: 100px; }
+        button { padding: 10px 16px; background: #00ff66; color: #000; border: none; border-radius: 4px; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #00cc00; }
+        .muted { color: #bbb; font-size: 14px; }
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            .nav a {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Intro Animation Section -->
+    <div class="initial-n-screen" id="initial-n-screen">
+        <div class="initial-n">N</div>
+    </div>
+
+    <div class="logo-container" id="logo-container">
+        <div class="vehicle-animation">
+            <div class="anim-vehicle">
+                <svg viewBox="0 0 980 360" preserveAspectRatio="xMidYMid meet" class="neon" aria-hidden="true">
+                    <g id="carGroup" class="car-group" transform="translate(0,0)">
+                        <path id="carBody"
+                              d="M150 210
+                                 C160 170, 220 150, 300 150
+                                 C420 150, 520 170, 620 200
+                                 C680 220, 720 220, 740 220"
+                              class="outline-stroke soft-glow" stroke-width="8"/>
+                        <g id="leftWheelGroup" transform="translate(220,240)">
+                            <circle id="leftWheel" cx="0" cy="0" r="18" stroke="var(--neon)" stroke-width="6" fill="transparent" class="soft-glow"/>
+                        </g>
+                        <g id="rightWheelGroup" transform="translate(600,240)">
+                            <circle id="rightWheel" cx="0" cy="0" r="18" stroke="var(--neon)" stroke-width="6" fill="transparent" class="soft-glow"/>
+                        </g>
+                        <text x="400" y="190" fill="var(--neon)" font-size="24" text-anchor="middle">MAD</text>
+                    </g>
+                </svg>
+            </div>
+        </div>
+        <div class="letter-n" id="letter-n">N</div>
+        <div class="dust-trail"></div>
+        <div class="full-logo" id="full-logo">
+            <h1>NOMADO</h1>
+            <p>Move Freely</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="landing-page" id="landing-page">
+        <header class="header">
+            <div class="container">
+                <div class="logo"><span>NOMADO</span></div>
+                <nav class="nav">
+                    <a href="#home">Home</a>
+                    <a href="#contracts">Contracts</a>
+                    <a href="#help">Help</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Home Section -->
+        <section id="home" class="hero">
+            <div class="container">
+                <h1>Welcome to NOMADO</h1>
+                <p>Move Freely - Your Ultimate Vehicle Rental Solution</p>
+            </div>
+        </section>
+
+        <!-- Contracts Section -->
+        <section id="contracts" class="contracts-section">
+            <div class="container">
+                <h2>Rental Contract</h2>
+                <p class="muted">Review and finalize your rental agreement below.</p>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Vehicle Details</h3>
+                        <form>
+                            <label for="vehicle-type">Vehicle Type</label>
+                            <select id="vehicle-type">
+                                <option value="car">Car</option>
+                                <option value="motorcycle">Motorcycle</option>
+                                <option value="van">Van</option>
+                            </select>
+                            
+                            <label for="rental-period">Rental Period</label>
+                            <input type="date" id="rental-period">
+                            
+                            <label for="additional-notes">Additional Notes</label>
+                            <textarea id="additional-notes"></textarea>
+                            
+                            <button type="submit" id="send">Submit Contract</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Help Section -->
+        <section id="help" class="help-section">
+            <div class="container">
+                <h2>Help Center</h2>
+                <div class="card">
+                    <h3>Frequently Asked Questions</h3>
+                    <div class="faq-item">
+                        <h4>How do I rent a vehicle?</h4>
+                        <p>Simply select your desired vehicle, choose your rental period, and complete the contract form.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>What payment methods are accepted?</h4>
+                        <p>We accept all major credit cards, PayPal, and cryptocurrency payments.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Animation sequence
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.getElementById('initial-n-screen').style.opacity = '0';
+                setTimeout(function() {
+                    document.getElementById('initial-n-screen').style.display = 'none';
+                    document.getElementById('logo-container').style.display = 'flex';
+                    
+                    setTimeout(function() {
+                        document.getElementById('letter-n').style.opacity = '1';
+                        document.getElementById('letter-n').style.animation = 'shake 0.5s ease-in-out';
+                        
+                        setTimeout(function() {
+                            document.getElementById('full-logo').style.opacity = '1';
+                            
+                            setTimeout(function() {
+                                document.getElementById('logo-container').style.opacity = '0';
+                                setTimeout(function() {
+                                    document.getElementById('logo-container').style.display = 'none';
+                                    document.getElementById('landing-page').style.display = 'block';
+                                }, 1000);
+                            }, 2000);
+                        }, 3000);
+                    }, 2000);
+                }, 1000);
+            }, 2000);
+        });
+
+        // Navigation smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
